@@ -1,0 +1,21 @@
+{% extends "store/base.html" %}
+
+{% block title %}Log In | NexusStore{% endblock %}
+
+{% block content %}
+<div class="auth-container">
+    <div class="auth-card">
+        <h1>Welcome Back</h1>
+        <p>Log in to your account</p>
+        <form method="post" class="auth-form">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn btn-primary">Log In</button>
+            <input type="hidden" name="next" value="{{ next|default:'/' }}">
+        </form>
+        <div class="auth-footer">
+            <p>Don't have an account? <a href="{% url 'register' %}">Sign up here</a></p>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,39 @@
+{% extends "store/base.html" %}
+{% load static %}
+
+{% block title %}
+    {{ product.name }} | NexusStore
+{% endblock %}
+
+{% block content %}
+    <div class="product-detail">
+        <div class="product-detail-image-container">
+            {% if product.image %}
+                <img src="{{ product.image.url }}" class="product-detail-image" alt="{{ product.name }}">
+            {% else %}
+                <img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?q=80&w=800&auto=format&fit=crop" class="product-detail-image" alt="Placeholder">
+            {% endif %}
+        </div>
+        
+        <div class="product-detail-info">
+            <h1>{{ product.name }}</h1>
+            <div class="product-detail-price">${{ product.price }}</div>
+            
+            <div class="product-description">
+                {{ product.description|linebreaks }}
+                {% if not product.description %}
+                    No description available for this premium product.
+                {% endif %}
+            </div>
+            
+            <form action="{% url 'cart:cart_add' product.id %}" method="post" class="add-to-cart-form">
+                {% csrf_token %}
+                <div class="form-group" style="margin-bottom: 0;">
+                    <label for="id_quantity" class="form-label">Quantity</label>
+                    {{ cart_product_form.quantity }}
+                </div>
+                <button type="submit" class="btn">Add to Cart</button>
+            </form>
+        </div>
+    </div>
+{% endblock %}

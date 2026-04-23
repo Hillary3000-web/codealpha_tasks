@@ -1,0 +1,55 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}PremiumEcom{% endblock %}</title>
+    <meta name="description" content="Discover our premium products with seamless shopping experience.">
+    <link href="{% static 'css/styles.css' %}" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <div class="nav-container">
+            <a href="/" class="logo">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-accent-color"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
+                <span>Nexus</span>Store
+            </a>
+            <nav class="nav-links">
+                <a href="{% url 'store:product_list' %}">Shop</a>
+                {% if user.is_authenticated %}
+                    <a href="{% url 'orders:user_orders' %}">Order History</a>
+                    <a href="{% url 'orders:order_create' %}">Checkout</a>
+                    <span class="nav-user">Hello, {{ user.username }}</span>
+                    <form method="post" action="{% url 'logout' %}" class="inline-form" style="display:inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="nav-auth-link" style="background:none; border:none; padding:0; cursor:pointer;">Logout</button>
+                    </form>
+                {% else %}
+                    <a href="{% url 'login' %}" class="nav-auth-link">Login</a>
+                    <a href="{% url 'register' %}" class="btn btn-small">Sign Up</a>
+                {% endif %}
+                <a href="{% url 'cart:cart_detail' %}" class="cart-link">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
+                    Cart
+                    {% with total_items=cart|length %}
+                        {% if total_items > 0 %}
+                            <span class="cart-count">{{ total_items }}</span>
+                        {% endif %}
+                    {% endwith %}
+                </a>
+            </nav>
+        </div>
+    </header>
+    
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer>
+        <p>&copy; {% now "Y" %} NexusStore. All rights reserved.</p>
+    </footer>
+
+    <script src="{% static 'js/main.js' %}"></script>
+</body>
+</html>

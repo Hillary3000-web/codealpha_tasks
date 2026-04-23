@@ -1,0 +1,17 @@
+{% extends "store/base.html" %}
+
+{% block title %}Order Created | NexusStore{% endblock %}
+
+{% block content %}
+    <div style="text-align: center; padding: 5rem 2rem; background: var(--card-bg); border-radius: 16px; border: 1px solid var(--border-color); animation: fadeIn 0.8s ease-out;">
+        <div style="width: 80px; height: 80px; background: rgba(34, 197, 94, 0.1); color: #22c55e; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 2rem;">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+        </div>
+        
+        <h1 style="margin-bottom: 1rem; font-size: 2.5rem;">Thank you for your order!</h1>
+        <p style="color: var(--text-secondary); font-size: 1.2rem; margin-bottom: 0.5rem;">Your order has been successfully processed.</p>
+        <p style="color: var(--text-secondary); font-size: 1.2rem; margin-bottom: 3rem;">Your order number is <strong style="color: var(--text-primary);">#{{ order.id }}</strong>.</p>
+        
+        <a href="{% url 'store:product_list' %}" class="btn">Return to Shop</a>
+    </div>
+{% endblock %}

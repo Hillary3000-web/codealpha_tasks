@@ -1,0 +1,75 @@
+{% extends "store/base.html" %}
+{% load static %}
+
+{% block title %}
+    Your Shopping Cart | NexusStore
+{% endblock %}
+
+{% block content %}
+    <h1>Your Shopping Cart</h1>
+    
+    {% if cart|length > 0 %}
+        <table class="cart-table">
+            <thead>
+                <tr>
+                    <th>Product</th>
+                    <th>Quantity</th>
+                    <th>Remove</th>
+                    <th>Unit Price</th>
+                    <th>Price</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in cart %}
+                    {% with product=item.product %}
+                    <tr class="cart-item">
+                        <td>
+                            <a href="{{ product.get_absolute_url }}">
+                                {% if product.image %}
+                                    <img src="{{ product.image.url }}" class="cart-product-img" alt="{{ product.name }}">
+                                {% else %}
+                                    <img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?q=80&w=200&auto=format&fit=crop" class="cart-product-img" alt="Placeholder">
+                                {% endif %}
+                                <span style="font-weight: 500; color: var(--text-primary);">{{ product.name }}</span>
+                            </a>
+                        </td>
+                        <td>
+                            <form action="{% url 'cart:cart_add' product.id %}" method="post" style="display: flex; gap: 0.5rem; align-items: center;">
+                                {% csrf_token %}
+                                {{ item.update_quantity_form.quantity }}
+                                {{ item.update_quantity_form.override }}
+                                <button type="submit" class="btn btn-outline" style="padding: 0.5rem;">Update</button>
+                            </form>
+                        </td>
+                        <td>
+                            <form action="{% url 'cart:cart_remove' product.id %}" method="post">
+                                {% csrf_token %}
+                                <button type="submit" class="btn" style="background: rgba(239, 68, 68, 0.2); color: #ef4444; padding: 0.5rem 1rem;">Remove</button>
+                            </form>
+                        </td>
+                        <td style="color: var(--text-secondary);">${{ item.price }}</td>
+                        <td style="font-weight: bold;">${{ item.total_price }}</td>
+                    </tr>
+                    {% endwith %}
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <div class="cart-actions" style="margin-top: 3rem;">
+            <div style="flex: 1;">
+                <p class="cart-total-row">Total: <span style="color: var(--accent-color);">${{ cart.get_total_price }}</span></p>
+            </div>
+            <div>
+                <a href="{% url 'store:product_list' %}" class="btn btn-outline">Continue Shopping</a>
+                <a href="{% url 'orders:order_create' %}" class="btn">Proceed to Checkout</a>
+            </div>
+        </div>
+    {% else %}
+        <div style="text-align: center; padding: 4rem; background: var(--card-bg); border-radius: 16px; border: 1px solid var(--border-color); margin-top: 2rem;">
+            <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" style="color: var(--text-secondary); margin-bottom: 1rem;"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
+            <h2 style="margin-bottom: 1rem;">Your cart is empty</h2>
+            <p style="color: var(--text-secondary); margin-bottom: 2rem;">Looks like you haven't added anything to your cart yet.</p>
+            <a href="{% url 'store:product_list' %}" class="btn">Start Shopping</a>
+        </div>
+    {% endif %}
+{% endblock %}
